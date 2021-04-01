@@ -89,12 +89,32 @@ function App() {
     };
   }, [pair]);
 
+  const handleSelect = (e) => {
+    console.log(e.target.value);
+
+    let unsubMessege = {
+      type: 'unsubscribe',
+      product_ids: [pair],
+      channels: ['ticker']
+    }
+    let unsub = JSON.stringify(unsubMessege);
+
+    ws.current.send(unsub);
+
+    setPair(e.target.value);
+  }
+
   return (
-    <div>
-      <header>
-        <p>Hello world</p>
-        <Dashboard></Dashboard>
-      </header>
+    <div className="container">
+      {
+        <select name="currency" value={pair} onChange={handleSelect}>
+          {currencies.map((cur, index) => {
+            return <option key={index} value={cur.id}>{cur.display_name}</option>
+          })}
+        </select>
+      }
+
+      <Dashboard price={price} data={pastData} />
     </div>
   );
 }
